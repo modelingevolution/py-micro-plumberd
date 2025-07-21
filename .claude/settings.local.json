@@ -15,7 +15,8 @@
       "Bash(dotnet test:*)",
       "Bash(MODELING_EVOLUTION_SRC=/mnt/d/source/modelingevolution dotnet test)",
       "Bash(venv/bin/python:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
