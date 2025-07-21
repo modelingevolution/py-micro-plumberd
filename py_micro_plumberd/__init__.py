@@ -5,5 +5,5 @@ from .metadata import Metadata
 from .stream import StreamName
 from .client import EventStoreClient
 
-__version__ = "0.1.1"
+__version__ = "0.1.4"
 __all__ = ["Event", "Metadata", "StreamName", "EventStoreClient"]

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-micro-plumberd"
-version = "0.1.1"
+version = "0.1.4"
 description = "A lightweight Python library for writing events to EventStore, compatible with .NET micro-plumberd"
 readme = "README.md"
 authors = [
@@ -57,7 +57,7 @@ select = ["E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "A", "COM", "C4", "DTZ
 ignore = ["ANN101", "ANN102"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "0.1.4"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
