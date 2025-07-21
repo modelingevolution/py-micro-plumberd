@@ -123,9 +123,8 @@ class TestEventStoreIntegration:
         """Test that events can be read using standard EventStore client."""
         # Write event using py-micro-plumberd
         event = RecordingFinished("rec-123", 120.5, "/recordings/rec-123.mp4")
-        metadata = Metadata(test_id="integration-test")
         
-        client.append_to_stream(unique_stream, event, metadata)
+        client.append_to_stream(unique_stream, event)
         
         # Read using raw EventStore client
         raw_client = EventStoreDBClient(uri=eventstore_url)
@@ -149,6 +148,10 @@ class TestEventStoreIntegration:
             metadata_dict = json.loads(recorded_event.metadata)
             assert "Created" in metadata_dict
             assert "ClientHostName" in metadata_dict
+            assert "$correlationId" in metadata_dict
+            assert "$causationId" in metadata_dict
+            assert metadata_dict["$correlationId"] == event.id
+            assert metadata_dict["$causationId"] == event.id
             
         finally:
             raw_client.close()

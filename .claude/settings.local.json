@@ -12,7 +12,10 @@
       "Bash(venv/bin/python3:*)",
       "Bash(rm:*)",
       "Bash(dotnet test)",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(MODELING_EVOLUTION_SRC=/mnt/d/source/modelingevolution dotnet test)",
+      "Bash(venv/bin/python:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

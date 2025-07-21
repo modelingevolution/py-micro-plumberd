@@ -16,12 +16,11 @@ class Metadata:
         """
         self._data = kwargs
     
-    def enrich(self) -> Dict[str, Any]:
+    def enrich(self, event_id: str) -> Dict[str, Any]:
         """Enrich metadata with standard fields.
         
         Args:
-            event_id: The event's unique identifier
-            event_type: The type name of the event
+            event_id: The event's unique identifier (used for correlation/causation)
             
         Returns:
             Complete metadata dictionary with standard fields
@@ -37,6 +36,8 @@ class Metadata:
         metadata = {
             "Created": created,
             "ClientHostName": hostname,
+            "$correlationId": event_id,
+            "$causationId": event_id,
         }
         
         # Add custom metadata

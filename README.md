@@ -78,7 +78,7 @@ Each event is automatically enriched with metadata:
 - **Created**: ISO 8601 timestamp of when the event was created
 - **ClientHostName**: Hostname of the machine creating the event
 - **\$correlationId**: Same as TEvent.Id
-- **\$causationId**: Same sa TEvent.Id
+- **\$causationId**: Same as TEvent.Id
 
 ## Advanced Usage
 

@@ -1,6 +1,6 @@
 """Example usage of py-micro-plumberd."""
 
-from py_micro_plumberd import Event, EventStoreClient, StreamName, Metadata
+from py_micro_plumberd import Event, EventStoreClient, StreamName
 
 
 # Define your events
@@ -39,22 +39,15 @@ def main():
         import time
         time.sleep(1)
         
-        # Append a RecordingFinished event with custom metadata
+        # Append a RecordingFinished event
         finished_event = RecordingFinished(
             recording_id="rec-123",
             duration=120.5,
             file_path="/recordings/rec-123.mp4"
         )
         
-        # Add custom metadata
-        metadata = Metadata(
-            user_id="user-456",
-            correlation_id="session-789",
-            camera_location="Building A - Floor 2"
-        )
-        
         print(f"Writing RecordingFinished event with ID: {finished_event.id}")
-        client.append_to_stream(stream, finished_event, metadata)
+        client.append_to_stream(stream, finished_event)
         
         print(f"\nEvents successfully written to stream: {stream}")
         print("These events can now be read using C# micro-plumberd!")

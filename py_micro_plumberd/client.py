@@ -60,7 +60,7 @@ class EventStoreClient:
         if metadata is None:
             metadata = Metadata.default()
         
-        enriched_metadata = metadata.enrich()
+        enriched_metadata = metadata.enrich(event.id)
         
         # Convert event to data
         event_data = event.to_dict()
