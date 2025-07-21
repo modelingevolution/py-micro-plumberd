@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-micro-plumberd"
-version = "0.1.0"
+version = "0.1.1"
 description = "A lightweight Python library for writing events to EventStore, compatible with .NET micro-plumberd"
 readme = "README.md"
 authors = [
