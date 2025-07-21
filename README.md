@@ -77,7 +77,7 @@ Example: `Recording-b27f9322-7d73-4d98-a605-a731a2c373c6`
 Each event is automatically enriched with metadata:
 - **Created**: ISO 8601 timestamp of when the event was created
 - **ClientHostName**: Hostname of the machine creating the event
-- **\$correlationId$**: Same as TEvent.Id
+- **\$correlationId**: Same as TEvent.Id
 - **\$causationId**: Same sa TEvent.Id
 
 ## Advanced Usage
