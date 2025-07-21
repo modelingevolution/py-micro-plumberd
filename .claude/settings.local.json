@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python3:*)",
+      "Bash(lsb_release:*)",
+      "Bash(source:*)",
+      "Bash(pytest:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(venv/bin/python3:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet test)",
+      "Bash(dotnet test:*)"
+    ],
+    "deny": []
+  }
+}
