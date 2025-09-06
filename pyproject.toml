@@ -1,20 +1,19 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel", "setuptools_scm[toml]>=7.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-micro-plumberd"
-version = "0.1.6"
+dynamic = ["version"]
 description = "A lightweight Python library for writing events to EventStore, compatible with .NET micro-plumberd"
 readme = "README.md"
 authors = [
     {name = "ModelingEvolution", email = "contact@modelingevolution.com"}
 ]
-license = {text = "MIT"}
+license = "MIT"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -89,3 +88,8 @@ ignore_missing_imports = true
 asyncio_mode = "auto"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
+
+[tool.setuptools_scm]
+write_to = "py_micro_plumberd/_version.py"
+version_scheme = "post-release"
+local_scheme = "no-local-version"

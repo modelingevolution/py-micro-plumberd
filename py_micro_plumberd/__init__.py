@@ -6,5 +6,9 @@ from .event import Event
 from .metadata import Metadata
 from .stream import StreamName
 
-__version__ = "0.1.6"
-__all__ = ["CommandBus", "Event", "EventStoreClient", "Metadata", "StreamName"]
+try:
+    from ._version import version as __version__
+except ImportError:
+    __version__ = "unknown"
+
+__all__ = ["CommandBus", "Event", "EventStoreClient", "Metadata", "StreamName", "__version__"]

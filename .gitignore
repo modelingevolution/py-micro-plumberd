@@ -93,3 +93,6 @@ artifacts/
 
 # EventStore
 eventstore-data/
+
+# Generated version file
+py_micro_plumberd/_version.py
