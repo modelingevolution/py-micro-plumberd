@@ -16,7 +16,17 @@
       "Bash(MODELING_EVOLUTION_SRC=/mnt/d/source/modelingevolution dotnet test)",
       "Bash(venv/bin/python:*)",
       "Bash(chmod:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh workflow:*)",
+      "Bash(gh api:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

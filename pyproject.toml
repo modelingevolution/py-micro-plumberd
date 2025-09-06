@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-micro-plumberd"
-version = "0.1.5"
+version = "0.1.6"
 description = "A lightweight Python library for writing events to EventStore, compatible with .NET micro-plumberd"
 readme = "README.md"
 authors = [
@@ -27,6 +27,7 @@ requires-python = ">=3.8"
 dependencies = [
     "esdbclient>=1.0.0",
     "python-dateutil>=2.8.0",
+    "pydantic>=2.5.0",
 ]
 
 [project.optional-dependencies]
@@ -47,6 +48,9 @@ Issues = "https://github.com/modelingevolution/py-micro-plumberd/issues"
 [tool.setuptools.packages.find]
 include = ["py_micro_plumberd*"]
 
+[tool.setuptools.package-data]
+py_micro_plumberd = ["py.typed"]
+
 [tool.black]
 line-length = 100
 target-version = ["py38", "py39", "py310", "py311", "py312"]
@@ -57,7 +61,7 @@ select = ["E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "A", "COM", "C4", "DTZ
 ignore = ["ANN101", "ANN102"]
 
 [tool.mypy]
-python_version = "0.1.5"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -70,6 +74,13 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "esdbclient",
+    "esdbclient.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
