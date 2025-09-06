@@ -1,7 +1,5 @@
 """Stream name formatting for py-micro-plumberd."""
 
-from typing import Optional
-
 
 class StreamName:
     """Represents an EventStore stream name following the {Category}-{StreamId} convention."""
@@ -14,9 +12,11 @@ class StreamName:
             stream_id: The unique stream identifier (typically a UUID)
         """
         if not category:
-            raise ValueError("Category cannot be empty")
+            msg = "Category cannot be empty"
+            raise ValueError(msg)
         if not stream_id:
-            raise ValueError("Stream ID cannot be empty")
+            msg = "Stream ID cannot be empty"
+            raise ValueError(msg)
 
         self.category = category
         self.stream_id = stream_id
@@ -43,7 +43,9 @@ class StreamName:
             ValueError: If the stream name format is invalid
         """
         parts = stream_name.split("-", 1)
-        if len(parts) != 2:
-            raise ValueError(f"Invalid stream name format: {stream_name}")
+        expected_parts = 2
+        if len(parts) != expected_parts:
+            msg = f"Invalid stream name format: {stream_name}"
+            raise ValueError(msg)
 
         return cls(category=parts[0], stream_id=parts[1])

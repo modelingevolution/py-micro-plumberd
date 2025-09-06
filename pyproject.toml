@@ -57,8 +57,11 @@ target-version = ["py38", "py39", "py310", "py311", "py312"]
 
 [tool.ruff]
 line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "A", "COM", "C4", "DTZ", "T10", "EM", "EXE", "ISC", "ICN", "G", "INP", "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "TCH", "ARG", "PTH", "ERA", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
-ignore = ["ANN101", "ANN102"]
+ignore = ["S101"]  # Allow assert in tests
 
 [tool.mypy]
 python_version = "3.9"

@@ -1,10 +1,9 @@
 """Integration tests for py-micro-plumberd with Pydantic v2."""
 
-import asyncio
 import json
 import os
 import uuid
-from datetime import datetime
+from collections.abc import Generator
 from typing import Optional
 
 import pytest
@@ -38,13 +37,13 @@ class TaskCompleted(Event):
 
 
 @pytest.fixture
-def eventstore_url():
+def eventstore_url() -> str:
     """Get EventStore URL from environment or default."""
     return os.getenv("EVENTSTORE_URL", "esdb://localhost:2113?tls=false")
 
 
 @pytest.fixture
-def client(eventstore_url):
+def client(eventstore_url: str) -> Generator[EventStoreClient, None, None]:
     """Create EventStore client."""
     client = EventStoreClient(eventstore_url)
     yield client
@@ -52,7 +51,7 @@ def client(eventstore_url):
 
 
 @pytest.fixture
-def unique_stream():
+def unique_stream() -> StreamName:
     """Generate unique stream name for testing."""
     stream_id = str(uuid.uuid4())
     return StreamName(category="TestStream", stream_id=stream_id)
@@ -61,23 +60,29 @@ def unique_stream():
 class TestEventFormat:
     """Test event format compatibility with C# micro-plumberd."""
 
-    def test_event_id_format(self):
+    def test_event_id_format(self) -> None:
         """Test that event ID is lowercase UUID with dashes."""
         event = RecordingFinished(
-            recording_id="rec-123", duration=120.5, file_path="/recordings/rec-123.mp4"
+            recording_id="rec-123",
+            duration=120.5,
+            file_path="/recordings/rec-123.mp4",
         )
 
         # Check format: lowercase UUID with dashes
         id_str = str(event.id).lower()
-        assert len(id_str) == 36
-        assert id_str.count("-") == 4
+        uuid_length = 36
+        uuid_dash_count = 4
+        assert len(id_str) == uuid_length
+        assert id_str.count("-") == uuid_dash_count
         assert id_str == id_str.lower()
         assert all(c in "0123456789abcdef-" for c in id_str)
 
-    def test_event_to_dict_pascal_case(self):
+    def test_event_to_dict_pascal_case(self) -> None:
         """Test that event properties are converted to PascalCase."""
         event = RecordingFinished(
-            recording_id="rec-123", duration=120.5, file_path="/recordings/rec-123.mp4"
+            recording_id="rec-123",
+            duration=120.5,
+            file_path="/recordings/rec-123.mp4",
         )
         data = event.model_dump(by_alias=True)
 
@@ -89,14 +94,15 @@ class TestEventFormat:
 
         # Check values
         assert data["RecordingId"] == "rec-123"
-        assert data["Duration"] == 120.5
+        expected_duration = 120.5
+        assert data["Duration"] == expected_duration
         assert data["FilePath"] == "/recordings/rec-123.mp4"
 
         # ID should be lowercase string
         assert isinstance(data["Id"], str)
         assert data["Id"] == data["Id"].lower()
 
-    def test_pythonic_field_access(self):
+    def test_pythonic_field_access(self) -> None:
         """Test that we use snake_case in Python code."""
         event = TaskCreated(
             title="Implement feature",
@@ -109,7 +115,7 @@ class TestEventFormat:
         assert event.description == "Add new feature X"
         assert event.assigned_to == "developer@example.com"
 
-    def test_optional_fields(self):
+    def test_optional_fields(self) -> None:
         """Test events with optional fields."""
         # With optional field
         task1 = TaskCreated(
@@ -135,11 +141,13 @@ class TestEventStoreIntegration:
         os.getenv("SKIP_INTEGRATION_TESTS", "true").lower() == "true",
         reason="Integration tests require EventStore",
     )
-    async def test_append_event(self, client, unique_stream):
+    async def test_append_event(self, client: EventStoreClient, unique_stream: StreamName) -> None:
         """Test appending an event to EventStore."""
         # Create event
         event = RecordingFinished(
-            recording_id="rec-456", duration=180.0, file_path="/recordings/rec-456.mp4"
+            recording_id="rec-456",
+            duration=180.0,
+            file_path="/recordings/rec-456.mp4",
         )
 
         # Append to stream
@@ -150,7 +158,7 @@ class TestEventStoreIntegration:
         # Read back to verify
         stream_name = str(unique_stream)
         esdb_client = EventStoreDBClient(
-            uri=os.getenv("EVENTSTORE_URL", "esdb://localhost:2113?tls=false")
+            uri=os.getenv("EVENTSTORE_URL", "esdb://localhost:2113?tls=false"),
         )
 
         try:
@@ -166,7 +174,8 @@ class TestEventStoreIntegration:
             data = json.loads(recorded_event.data)
             assert "RecordingId" in data
             assert data["RecordingId"] == "rec-456"
-            assert data["Duration"] == 180.0
+            expected_duration_metadata = 180.0
+            assert data["Duration"] == expected_duration_metadata
             assert data["FilePath"] == "/recordings/rec-456.mp4"
 
             # Check metadata
@@ -181,11 +190,16 @@ class TestEventStoreIntegration:
         os.getenv("SKIP_INTEGRATION_TESTS", "true").lower() == "true",
         reason="Integration tests require EventStore",
     )
-    async def test_custom_metadata(self, client, unique_stream):
+    async def test_custom_metadata(
+        self,
+        client: EventStoreClient,
+        unique_stream: StreamName,
+    ) -> None:
         """Test appending event with custom metadata."""
         # Create event with custom metadata
         event = TaskCompleted(
-            completed_by="developer@example.com", completion_notes="All tests passing"
+            completed_by="developer@example.com",
+            completion_notes="All tests passing",
         )
 
         custom_metadata = Metadata(
@@ -195,7 +209,9 @@ class TestEventStoreIntegration:
 
         # Append to stream
         position = client.append_to_stream(
-            stream=unique_stream, event=event, metadata=custom_metadata
+            stream=unique_stream,
+            event=event,
+            metadata=custom_metadata,
         )
 
         assert position is not None
@@ -203,7 +219,7 @@ class TestEventStoreIntegration:
         # Read back to verify metadata
         stream_name = str(unique_stream)
         esdb_client = EventStoreDBClient(
-            uri=os.getenv("EVENTSTORE_URL", "esdb://localhost:2113?tls=false")
+            uri=os.getenv("EVENTSTORE_URL", "esdb://localhost:2113?tls=false"),
         )
 
         try:
@@ -224,7 +240,7 @@ class TestEventStoreIntegration:
 class TestDeserialization:
     """Test deserialization from EventStore format."""
 
-    def test_deserialize_from_pascal_case(self):
+    def test_deserialize_from_pascal_case(self) -> None:
         """Test deserializing events from PascalCase (EventStore format)."""
         # Simulate data from EventStore
         pascal_data = {
@@ -239,14 +255,17 @@ class TestDeserialization:
 
         # Access with snake_case
         assert event.recording_id == "rec-789"
-        assert event.duration == 240.75
+        expected_duration_deser = 240.75
+        assert event.duration == expected_duration_deser
         assert event.file_path == "/recordings/rec-789.mp4"
         assert str(event.id).lower() == "12345678-1234-1234-1234-123456789012"
 
-    def test_round_trip_serialization(self):
+    def test_round_trip_serialization(self) -> None:
         """Test round-trip serialization."""
         original = TaskCreated(
-            title="Test task", description="Test description", assigned_to="test@example.com"
+            title="Test task",
+            description="Test description",
+            assigned_to="test@example.com",
         )
 
         # Serialize to PascalCase

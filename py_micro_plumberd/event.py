@@ -2,7 +2,7 @@
 
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, ConfigDict, field_serializer
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_pascal
 
 

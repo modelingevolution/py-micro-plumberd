@@ -1,7 +1,7 @@
 """EventStore client for py-micro-plumberd."""
 
 import json
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from esdbclient import EventStoreDBClient, NewEvent, StreamState
 
@@ -16,9 +16,9 @@ class EventStoreClient:
     def __init__(
         self,
         connection_string: str,
-        default_deadline: Optional[float] = None,
-        keep_alive_interval: Optional[int] = None,
-        keep_alive_timeout: Optional[int] = None,
+        default_deadline: Optional[float] = None,  # noqa: ARG002
+        keep_alive_interval: Optional[int] = None,  # noqa: ARG002
+        keep_alive_timeout: Optional[int] = None,  # noqa: ARG002
     ) -> None:
         """Initialize EventStore client.
 
@@ -80,13 +80,11 @@ class EventStoreClient:
             current_position = StreamState.ANY
 
         # Append to stream
-        commit_position = self._client.append_to_stream(
+        return self._client.append_to_stream(
             stream_name=stream_name,
             events=[new_event],
             current_version=current_position,
         )
-
-        return commit_position
 
     def close(self) -> None:
         """Close the client connection."""
@@ -96,6 +94,6 @@ class EventStoreClient:
         """Context manager entry."""
         return self
 
-    def __exit__(self, *args: Any) -> None:
+    def __exit__(self, *args: object) -> None:
         """Context manager exit."""
         self.close()

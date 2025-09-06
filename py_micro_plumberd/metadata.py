@@ -2,13 +2,13 @@
 
 import socket
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class Metadata:
     """Event metadata container with automatic enrichment."""
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize metadata with custom values.
 
         Args:
@@ -16,7 +16,7 @@ class Metadata:
         """
         self._data = kwargs
 
-    def enrich(self, event_id: str) -> Dict[str, Any]:
+    def enrich(self, event_id: str) -> dict[str, Any]:
         """Enrich metadata with standard fields.
 
         Args:
