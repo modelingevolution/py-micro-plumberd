@@ -56,14 +56,24 @@ class CommandBus:
         # Get command ID (support both Event base class and any model with id field)
         command_id = str(command.id) if hasattr(command, "id") else str(uuid4())
 
-        # Build metadata exactly as C# CommandBus does
+        # Get timestamp in C# format (7 decimal places for fractional seconds)
+        now = datetime.now(timezone.utc)
+        # Format timestamp to match C# format: YYYY-MM-DDTHH:MM:SS.fffffffZ
+        # Python's isoformat gives 6 decimal places, C# uses 7
+        timestamp_base = now.strftime("%Y-%m-%dT%H:%M:%S")
+        microseconds = now.microsecond
+        # Pad microseconds to 7 digits (C# uses ticks, which has 7 decimal places)
+        timestamp = f"{timestamp_base}.{microseconds:06d}0+00:00"
+
+        # Build metadata exactly as C# CommandBus does (with same field order)
         metadata = {
+            "Created": timestamp,
+            "ClientHostName": socket.gethostname(),
             "$correlationId": command_id,
             "$causationId": command_id,
-            "SessionId": self.session_id,  # CommandBus session
             "RecipientId": str(recipient_id),  # Where to route
-            "Created": datetime.now(timezone.utc).isoformat(),
-            "ClientHostName": socket.gethostname(),
+            "SessionId": self.session_id,  # CommandBus session
+            "UserId": None,  # Required by C# side, even if null
         }
 
         # Serialize command with PascalCase for EventStore

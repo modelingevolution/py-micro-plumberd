@@ -117,6 +117,21 @@ class TestCommandBus:
         assert metadata["RecipientId"] == recipient_id
         assert metadata["ClientHostName"] == "test-host"
         assert "Created" in metadata
+        assert "UserId" in metadata
+        assert metadata["UserId"] is None
+        
+        # Verify timestamp format (7 decimal places for C# compatibility)
+        created = metadata["Created"]
+        # Should have format: YYYY-MM-DDTHH:MM:SS.fffffffZ
+        assert "T" in created  # ISO format
+        assert "." in created  # Has fractional seconds
+        # Check for 7 decimal places
+        fractional_part = created.split(".")[1].split("+")[0]
+        assert len(fractional_part) == 7, f"Expected 7 decimal places, got {len(fractional_part)}: {created}"
+        
+        # Verify field order (Created should be first)
+        keys_list = list(metadata.keys())
+        assert keys_list[0] == "Created", f"Expected 'Created' first, got {keys_list[0]}"
 
     async def test_command_data_pascal_case(
         self,
